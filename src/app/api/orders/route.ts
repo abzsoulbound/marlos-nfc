@@ -1,16 +1,21 @@
-// src/app/api/orders/route.ts
-
-import { NextResponse } from "next/server";
-import { createOrder } from "@/lib/orders.model";
+import { NextResponse } from "next/server"
+import { createOrAppendOrder } from "@/lib/orders"
+import { OrderItem } from "@/lib/domain"
 
 export async function POST(req: Request) {
-  const body = await req.json();
+  const body = await req.json()
+  const { tableId, items } = body as {
+    tableId: string
+    items: OrderItem[]
+  }
 
-  const order = createOrder({
-    table: body.table,
-    items: body.items, // [{ itemId, name, price, quantity }]
-    notes: body.notes ?? "",
-  });
+  if (!tableId || !items?.length) {
+    return NextResponse.json(
+      { error: "Invalid payload" },
+      { status: 400 }
+    )
+  }
 
-  return NextResponse.json({ orderId: order.orderId });
+  const order = createOrAppendOrder(tableId, items)
+  return NextResponse.json(order)
 }

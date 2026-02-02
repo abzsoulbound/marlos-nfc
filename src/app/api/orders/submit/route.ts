@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server"
-import { deliverOrder } from "@/lib/orders"
+import { submitOrder } from "@/lib/orders"
 
 export async function POST(req: Request) {
   const { orderId } = await req.json()
@@ -11,6 +11,6 @@ export async function POST(req: Request) {
     )
   }
 
-  const order = deliverOrder(orderId)
+  const order = submitOrder(orderId)
   return NextResponse.json(order)
 }
