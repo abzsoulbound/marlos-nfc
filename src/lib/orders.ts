@@ -1,47 +1,76 @@
-type OrderItem = {
-  itemId: string
-  name: string
-  quantity: number
-  status: "pending" | "ready"
-}
+import { Order, OrderId, OrderStatus, TableId } from "./domain"
+import { transitionOrder } from "./orderState"
 
-type Order = {
-  orderId: string
-  table: string
-  createdAt: number
-  delivered: boolean
-  items: OrderItem[]
-}
+/**
+ * Single in-memory authority for orders.
+ * This will later be swapped for DB without changing callers.
+ */
+const ORDER_STORE = new Map<OrderId, Order>()
 
-const orders: Order[] = [
-  {
-    orderId: "ord_1",
-    table: "5",
-    createdAt: Date.now(),
-    delivered: false,
-    items: [
-      { itemId: "i1", name: "Burger", quantity: 2, status: "pending" },
-      { itemId: "i2", name: "Fries", quantity: 1, status: "pending" }
-    ]
+/* ---------- CREATE ---------- */
+export function createOrder(order: Order) {
+  if (ORDER_STORE.has(order.id)) {
+    throw new Error(`Order ${order.id} already exists`)
   }
-]
-
-export function getActiveOrders() {
-  return orders
-    .filter(o => !o.delivered)
-    .sort((a, b) => a.createdAt - b.createdAt)
+  ORDER_STORE.set(order.id, order)
 }
 
-export function markItemReady(orderId: string, itemId: string) {
-  const order = orders.find(o => o.orderId === orderId)
-  if (!order) return
+/* ---------- READ ---------- */
+export function getOrder(id: OrderId): Order | undefined {
+  return ORDER_STORE.get(id)
+}
 
-  const item = order.items.find(i => i.itemId === itemId)
-  if (!item) return
+export function getAllOrders(): Order[] {
+  return Array.from(ORDER_STORE.values())
+}
 
-  item.status = "ready"
+export function getKitchenOrders(): Order[] {
+  return Array.from(ORDER_STORE.values()).filter(
+    o => o.status === OrderStatus.SUBMITTED
+  )
+}
 
-  if (order.items.every(i => i.status === "ready")) {
-    order.delivered = true
+export function getReadyOrdersByTable(tableId: TableId): Order[] {
+  return Array.from(ORDER_STORE.values()).filter(
+    o =>
+      o.tableId === tableId &&
+      o.status === OrderStatus.READY
+  )
+}
+
+/* ---------- TRANSITIONS ---------- */
+export function submitOrder(id: OrderId) {
+  const order = requireOrder(id)
+  ORDER_STORE.set(id, transitionOrder(order, OrderStatus.SUBMITTED))
+}
+
+export function markOrderReady(id: OrderId) {
+  const order = requireOrder(id)
+  ORDER_STORE.set(id, transitionOrder(order, OrderStatus.READY))
+}
+
+export function deliverOrdersForTable(tableId: TableId) {
+  for (const order of ORDER_STORE.values()) {
+    if (
+      order.tableId === tableId &&
+      order.status === OrderStatus.READY
+    ) {
+      ORDER_STORE.set(
+        order.id,
+        transitionOrder(order, OrderStatus.DELIVERED)
+      )
+    }
   }
+}
+
+export function closeOrder(id: OrderId) {
+  const order = requireOrder(id)
+  ORDER_STORE.set(id, transitionOrder(order, OrderStatus.CLOSED))
+}
+
+/* ---------- INTERNAL ---------- */
+function requireOrder(id: OrderId): Order {
+  const order = ORDER_STORE.get(id)
+  if (!order) throw new Error(`Order ${id} not found`)
+  return order
 }
