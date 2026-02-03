@@ -6,241 +6,168 @@ import { menu } from "@/lib/menu";
 
 type Cart = Record<string, number>;
 
-type NFCTagClientProps = {
-  nfcTagId: string;
-};
-
-export default function NFCTagClient({ nfcTagId }: NFCTagClientProps) {
+export default function NFCTagClient({ nfcTagId }: { nfcTagId: string }) {
   const router = useRouter();
-
-  const [open, setOpen] = useState<Record<string, boolean>>({});
+  const [activeSection, setActiveSection] = useState(menu[0]?.id);
   const [cart, setCart] = useState<Cart>({});
 
-  function toggleSection(id: string) {
-    setOpen((prev) => ({ ...prev, [id]: !(prev[id] ?? false) }));
+  const items = useMemo(() => {
+    const section = menu.find(s => s.id === activeSection);
+    return section?.items ?? [];
+  }, [activeSection]);
+
+  const totalCount = Object.values(cart).reduce((a, b) => a + b, 0);
+
+  function add(id: string) {
+    setCart(c => ({ ...c, [id]: (c[id] ?? 0) + 1 }));
   }
 
-  function addItem(itemId: string) {
-    setCart((prev) => ({ ...prev, [itemId]: (prev[itemId] ?? 0) + 1 }));
-  }
-
-  function removeItem(itemId: string) {
-    setCart((prev) => {
-      const current = prev[itemId] ?? 0;
-      if (current <= 0) return prev;
-
-      const next = { ...prev };
-      const updated = current - 1;
-
-      if (updated <= 0) delete next[itemId];
-      else next[itemId] = updated;
-
+  function remove(id: string) {
+    setCart(c => {
+      const next = { ...c };
+      if (!next[id]) return next;
+      if (next[id] === 1) delete next[id];
+      else next[id]--;
       return next;
     });
-  }
-
-  const { totalItems, totalPrice } = useMemo(() => {
-    let items = 0;
-    let price = 0;
-
-    for (const section of menu) {
-      for (const item of section.items) {
-        const qty = cart[item.id] ?? 0;
-        if (qty > 0) {
-          items += qty;
-          price += qty * item.price;
-        }
-      }
-    }
-
-    return { totalItems: items, totalPrice: price };
-  }, [cart]);
-
-  const hasItems = totalItems > 0;
-
-  function handleReview() {
-    if (typeof window !== "undefined") {
-      sessionStorage.setItem("cart", JSON.stringify(cart));
-    }
-    router.push(`/t/${nfcTagId}/review`);
   }
 
   return (
     <main
       style={{
-        padding: 20,
-        maxWidth: 720,
-        margin: "0 auto",
-        lineHeight: 1.4,
+        background: "#0B1220",
+        minHeight: "100vh",
+        color: "#E5E7EB",
+        padding: 16,
       }}
     >
-      <header style={{ marginBottom: 28 }}>
-        <h1 style={{ fontSize: 22, marginBottom: 4 }}>
-          Marlo’s Brasserie
-        </h1>
-        <p style={{ opacity: 0.7 }}>
-          Table / Tag ID: {nfcTagId || "UNKNOWN"}
-        </p>
-      </header>
+      {/* Header */}
+      <h1 style={{ fontSize: 22, marginBottom: 12 }}>
+        Table {nfcTagId}
+      </h1>
 
-      {menu.map((section) => {
-        const isOpen = open[section.id] ?? false;
-
-        return (
-          <section key={section.id} style={{ marginBottom: 18 }}>
+      {/* Section Tabs */}
+      <div style={{ display: "flex", gap: 8, overflowX: "auto", marginBottom: 16 }}>
+        {menu.map(section => {
+          const active = section.id === activeSection;
+          return (
             <button
-              onClick={() => toggleSection(section.id)}
+              key={section.id}
+              onClick={() => setActiveSection(section.id)}
               style={{
-                width: "100%",
-                textAlign: "left",
-                background: "none",
+                padding: "8px 14px",
+                borderRadius: 999,
                 border: "none",
-                padding: "14px 0",
-                fontSize: 18,
+                background: active ? "#1E40AF" : "#111B2E",
+                color: active ? "#fff" : "#9CA3AF",
                 fontWeight: 600,
-                borderBottom: "1px solid #333",
-                cursor: "pointer",
-                color: "inherit",
+                whiteSpace: "nowrap",
               }}
             >
-              {section.title} {isOpen ? "▾" : "▸"}
+              {section.title}
             </button>
+          );
+        })}
+      </div>
 
-            {isOpen &&
-              section.items.map((item) => {
-                const qty = cart[item.id] ?? 0;
+      {/* Items */}
+      <div>
+        {items.map(item => {
+          const qty = cart[item.id] ?? 0;
 
-                return (
-                  <div
-                    key={item.id}
-                    style={{
-                      padding: "12px 0",
-                      borderBottom: "1px solid #222",
-                    }}
-                  >
-                    <div
-                      style={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                        gap: 12,
-                        alignItems: "center",
-                      }}
-                    >
-                      <strong>{item.name}</strong>
-                      <span>£{item.price.toFixed(2)}</span>
-                    </div>
+          return (
+            <div
+              key={item.id}
+              style={{
+                background: "#111B2E",
+                borderRadius: 12,
+                padding: 14,
+                marginBottom: 12,
+                border: "1px solid #1F2A44",
+              }}
+            >
+              <div style={{ display: "flex", justifyContent: "space-between" }}>
+                <strong>{item.name}</strong>
+                <span style={{ color: "#38BDF8", fontWeight: 600 }}>
+                  £{item.price.toFixed(2)}
+                </span>
+              </div>
 
-                    {item.description && (
-                      <p
-                        style={{
-                          fontSize: 14,
-                          opacity: 0.8,
-                          marginTop: 6,
-                        }}
-                      >
-                        {item.description}
-                      </p>
-                    )}
+              {item.description && (
+                <div style={{ fontSize: 13, color: "#9CA3AF", marginTop: 4 }}>
+                  {item.description}
+                </div>
+              )}
 
-                    <div
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: 10,
-                        marginTop: 10,
-                      }}
-                    >
-                      <button
-                        onClick={() => removeItem(item.id)}
-                        disabled={qty === 0}
-                        style={{
-                          width: 36,
-                          height: 32,
-                          borderRadius: 8,
-                          border: "1px solid #333",
-                          background: qty === 0 ? "#111" : "#0a0a0a",
-                          color: "inherit",
-                          opacity: qty === 0 ? 0.5 : 1,
-                          cursor: qty === 0 ? "default" : "pointer",
-                        }}
-                      >
-                        −
-                      </button>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "flex-end",
+                  alignItems: "center",
+                  gap: 12,
+                  marginTop: 10,
+                }}
+              >
+                <button
+                  onClick={() => remove(item.id)}
+                  style={{
+                    width: 32,
+                    height: 32,
+                    borderRadius: 8,
+                    border: "none",
+                    background: "#1E293B",
+                    color: "#3B82F6",
+                    fontSize: 18,
+                  }}
+                >
+                  −
+                </button>
 
-                      <span
-                        style={{
-                          minWidth: 28,
-                          textAlign: "center",
-                          fontWeight: 600,
-                        }}
-                      >
-                        {qty}
-                      </span>
+                <span style={{ minWidth: 16, textAlign: "center" }}>{qty}</span>
 
-                      <button
-                        onClick={() => addItem(item.id)}
-                        style={{
-                          width: 36,
-                          height: 32,
-                          borderRadius: 8,
-                          border: "1px solid #333",
-                          background: "#0a0a0a",
-                          color: "inherit",
-                          cursor: "pointer",
-                        }}
-                      >
-                        +
-                      </button>
-                    </div>
-                  </div>
-                );
-              })}
-          </section>
-        );
-      })}
+                <button
+                  onClick={() => add(item.id)}
+                  style={{
+                    width: 32,
+                    height: 32,
+                    borderRadius: 8,
+                    border: "none",
+                    background: "#1E293B",
+                    color: "#3B82F6",
+                    fontSize: 18,
+                  }}
+                >
+                  +
+                </button>
+              </div>
+            </div>
+          );
+        })}
+      </div>
 
-      {hasItems && (
-        <footer
+      {/* Review Button */}
+      {totalCount > 0 && (
+        <button
+          onClick={() => {
+            sessionStorage.setItem("cart", JSON.stringify(cart));
+            router.push(`/t/${nfcTagId}/review`);
+          }}
           style={{
             position: "sticky",
-            bottom: 0,
-            marginTop: 18,
-            padding: 14,
-            background: "#0a0a0a",
-            borderTop: "1px solid #333",
-            borderRadius: 12,
+            bottom: 16,
+            width: "100%",
+            marginTop: 20,
+            padding: 16,
+            borderRadius: 14,
+            border: "none",
+            background: "linear-gradient(135deg, #3B82F6, #2563EB)",
+            color: "#fff",
+            fontSize: 16,
+            fontWeight: 600,
           }}
         >
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              gap: 12,
-              marginBottom: 10,
-            }}
-          >
-            <span style={{ opacity: 0.85 }}>
-              {totalItems} item{totalItems === 1 ? "" : "s"}
-            </span>
-            <strong>£{totalPrice.toFixed(2)}</strong>
-          </div>
-
-          <button
-            style={{
-              width: "100%",
-              padding: 12,
-              borderRadius: 10,
-              border: "1px solid #333",
-              background: "#111",
-              color: "inherit",
-              fontWeight: 600,
-              cursor: "pointer",
-            }}
-            onClick={handleReview}
-          >
-            Review Order
-          </button>
-        </footer>
+          Review Order ({totalCount})
+        </button>
       )}
     </main>
   );

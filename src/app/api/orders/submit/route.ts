@@ -1,16 +1,15 @@
-import { NextResponse } from "next/server"
-import { submitOrder } from "@/lib/orders"
+export const runtime = "edge";
+
+import { NextResponse } from "next/server";
+import { createOrder } from "@/lib/orders";
 
 export async function POST(req: Request) {
-  const { orderId } = await req.json()
+  const body = await req.json();
 
-  if (!orderId) {
-    return NextResponse.json(
-      { error: "Missing orderId" },
-      { status: 400 }
-    )
-  }
+  const order = await createOrder({
+    table: body.table ?? body.tableId,
+    items: body.items,
+  });
 
-  const order = submitOrder(orderId)
-  return NextResponse.json(order)
+  return NextResponse.json(order);
 }

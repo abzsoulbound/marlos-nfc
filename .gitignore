@@ -6,3 +6,7 @@ dist
 .env.local
 .env.production
 .DS_Store
+
+/src/generated/prisma
+.vercel
+.env*.local

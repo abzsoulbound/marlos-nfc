@@ -5,17 +5,17 @@ import { deriveRouting } from "./order.utils";
 
 export function buildOrder(params: {
   id: string;
-  tableId: string;
+  table: string;
   cart: Cart;
   notes?: string;
 }): Order {
-  const now = new Date().toISOString();
+  const now = Date.now();
 
   return {
     id: params.id,
-    tableId: params.tableId,
+    table: params.table,
     createdAt: now,
-    status: "pending",
+    status: "OPEN",
     cart: serializeCart(params.cart),
     routing: deriveRouting(params.cart),
     notes: params.notes ?? "",

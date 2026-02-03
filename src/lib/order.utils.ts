@@ -3,13 +3,13 @@ import type { OrderRouting } from "./order.types";
 import { getFulfillmentArea } from "./fulfillment.utils";
 
 export function deriveRouting(cart: Cart): OrderRouting {
-  let kitchen = false;
-  let bar = false;
+  const kitchen = [];
+  const bar = [];
 
-  for (const item of cart.items) {
+  for (const item of Object.values(cart.items)) {
     const area = getFulfillmentArea(item.itemId);
-    if (area === "kitchen") kitchen = true;
-    if (area === "bar") bar = true;
+    if (area === "kitchen") kitchen.push(item);
+    if (area === "bar") bar.push(item);
   }
 
   return { kitchen, bar };

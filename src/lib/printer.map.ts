@@ -2,9 +2,9 @@
 // Map fulfilment areas to physical printers.
 
 import type { Printer } from "./printer.types";
-import type { FulfilmentArea } from "./fulfilment.types";
+import type { FulfillmentArea } from "./fulfilment.types";
 
-export const PRINTER_BY_AREA: Record<FulfilmentArea, Printer> = {
+export const PRINTER_BY_AREA: Record<FulfillmentArea, Printer> = {
   kitchen: "kitchen-main",
   bar: "bar-main",
 };

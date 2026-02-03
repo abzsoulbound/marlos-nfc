@@ -1,33 +1,21 @@
-import { redirect } from "next/navigation"
+export const runtime = "edge";
+
+
+
+import NFCTagClient from "./NFCTagClient";
 
 type PageProps = {
-  params: {
-    nfcTagId: string
-  }
-}
+  params: Promise<{
+    nfcTagId: string;
+  }>;
+};
 
 export default async function NFCTablePage({ params }: PageProps) {
-  const tableId = params.nfcTagId
+  const { nfcTagId } = await params;
 
-  if (!tableId) {
-    return (
-      <main style={{ padding: 24 }}>
-        <h1>Invalid table</h1>
-      </main>
-    )
+  if (!nfcTagId) {
+    return <div>Invalid table</div>;
   }
 
-  await fetch(
-    `${process.env.NEXT_PUBLIC_BASE_URL ?? ""}/api/orders/deliver`,
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ tableId }),
-      cache: "no-store",
-    }
-  )
-
-  redirect(`/menu/${tableId}`)
+  return <NFCTagClient nfcTagId={nfcTagId} />;
 }
