@@ -1,37 +1,18 @@
-export type OrderStatus =
-  | "OPEN"
-  | "PENDING_ASSIGNMENT"
-  | "ACCEPTED"
-  | "READY"
-  | "DELIVERED"
-  | "CLOSED";
+import type { SerializedCart } from "@/lib/cart.types";
 
-export type OrderItem = {
-  itemId: string;
-  name: string;
-  quantity: number;
-  price: number;
-  category?: "DRINK" | "FOOD";
-};
+export type OrderStatus = "pending" | "completed";
 
-export type SerializedCart = {
-  items: OrderItem[];
-  totalItems: number;
-  totalPrice: number;
-};
+export interface OrderRouting {
+  kitchen: boolean;
+  bar: boolean;
+}
 
-export type OrderRouting = {
-  kitchen: OrderItem[];
-  bar: OrderItem[];
-};
-
-export type Order = {
+export interface Order {
   id: string;
-  table: string;
-  createdAt: number;
-  updatedAt?: number;
+  tableId: string;
+  createdAt: string;
   status: OrderStatus;
   cart: SerializedCart;
   routing: OrderRouting;
   notes: string;
-};
+}

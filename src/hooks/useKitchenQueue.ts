@@ -1,7 +1,7 @@
 // src/hooks/useKitchenQueue.ts
 
 import { useEffect, useState } from "react";
-import { fetchKitchenQueue } from "@/lib/kitchen.api";
+import { getKitchenQueue } from "../lib/orders";
 
 export function useKitchenQueue(intervalMs = 3000) {
   const [orders, setOrders] = useState<any[]>([]);
@@ -9,8 +9,8 @@ export function useKitchenQueue(intervalMs = 3000) {
 
   async function load() {
     try {
-      const data = await fetchKitchenQueue();
-      setOrders(data.orders);
+      const data = await getKitchenQueue();
+      setOrders(data);
       setError(null);
     } catch {
       setError("Access denied");

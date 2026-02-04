@@ -1,19 +1,17 @@
-export const runtime = "edge";
-
 import { NextResponse } from "next/server"
-import { db } from "@/lib/db"
-import { requireStaff } from "@/lib/staffAuth"
-import { StaffRole, OrderStatus } from "@prisma/client"
+import { markStationReady } from "@/lib/orders"
+import { Station } from "@/lib/domain"
 
 export async function POST(req: Request) {
-  const { orderId, pin } = await req.json()
+  const { orderId, station } = await req.json()
 
-  await requireStaff(pin, [StaffRole.KITCHEN, StaffRole.BAR])
+  if (!orderId || !station) {
+    return NextResponse.json(
+      { error: "Invalid payload" },
+      { status: 400 }
+    )
+  }
 
-  await db.order.update({
-    where: { id: orderId },
-    data: { status: OrderStatus.READY },
-  })
-
-  return NextResponse.json({ ok: true })
+  const order = markStationReady(orderId, station as Station)
+  return NextResponse.json(order)
 }

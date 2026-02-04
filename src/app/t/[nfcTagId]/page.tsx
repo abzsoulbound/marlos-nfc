@@ -1,7 +1,3 @@
-export const runtime = "edge";
-
-
-
 import NFCTagClient from "./NFCTagClient";
 
 type PageProps = {
@@ -19,3 +15,5 @@ export default async function NFCTablePage({ params }: PageProps) {
 
   return <NFCTagClient nfcTagId={nfcTagId} />;
 }
+
+export const runtime = "edge";

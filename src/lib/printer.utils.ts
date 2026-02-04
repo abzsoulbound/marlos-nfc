@@ -12,8 +12,10 @@ export function buildPrintJobs(order: Order): PrintJob[] {
 
   for (const item of order.cart.items) {
     const area = getFulfillmentArea(item.itemId);
-    byArea[area].push(item.quantity + "x " + item.name);
-}
+    byArea[area].push(
+      `${item.quantity}× ${item.name}${item.notes ? ` (${item.notes})` : ""}`
+    );
+  }
 
   (Object.keys(byArea) as Array<"kitchen" | "bar">).forEach((area) => {
     if (!byArea[area].length) return;

@@ -1,5 +1,0 @@
-name = "lively-grass-8015"
-compatibility_date = "2026-02-03"
-
-[assets]
-directory = ".vercel/output/static"
