@@ -1,6 +1,9 @@
-import { NextResponse } from "next/server"
-import { getKitchenQueue } from "@/lib/orders"
+import { NextResponse } from "next/server";
+import { listQueue } from "@/lib/ops";
+
+export const runtime = "nodejs";
 
 export async function GET() {
-  return NextResponse.json(getKitchenQueue())
+  const orders = listQueue("KITCHEN");
+  return NextResponse.json(orders);
 }

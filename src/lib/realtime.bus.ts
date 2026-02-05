@@ -1,12 +1,12 @@
-type Handler = (payload: any) => void
+type Listener = (event: any) => void;
 
-const handlers: Record<string, Handler[]> = {}
+const listeners = new Set<Listener>();
 
-export function on(event: string, fn: Handler) {
-  handlers[event] ??= []
-  handlers[event].push(fn)
+export function publish(event: any) {
+  for (const l of listeners) l(event);
 }
 
-export function emit(event: string, payload: any) {
-  handlers[event]?.forEach(h => h(payload))
+export function subscribe(listener: Listener) {
+  listeners.add(listener);
+  return () => listeners.delete(listener);
 }

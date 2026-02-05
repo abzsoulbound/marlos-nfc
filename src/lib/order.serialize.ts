@@ -4,6 +4,7 @@ import { serializeCart } from "./cart.serialize";
 import { deriveRouting } from "./order.utils";
 
 export function buildOrder(params: {
+  notes?: string;
   id: string;
   tableId: string;
   cart: Cart;

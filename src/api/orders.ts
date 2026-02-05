@@ -9,5 +9,5 @@ export function getOrder(orderId: string): Order | null {
 }
 
 export function getOpenOrders(): Order[] {
-  return orderStore.getAll().filter(o => o.status === "open");
+  return orderStore.getAll().filter((o: any) => o.status === "pending");
 }

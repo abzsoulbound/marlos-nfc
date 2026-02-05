@@ -1,49 +1,12 @@
-// src/lib/staffAuth.ts
-
-const STORAGE_KEY = "marlos_staff_auth";
-const SESSION_DURATION_MS = 1000 * 60 * 60 * 24 * 30; // 30 days
-
-// CHANGE THIS PASSWORD
-const STAFF_PASSWORD = "marlos123";
-
-type Session = {
-  authenticated: boolean;
-  expiresAt: number;
-};
-
-export function isStaffAuthenticated(): boolean {
-  if (typeof window === "undefined") return false;
-
-  const raw = localStorage.getItem(STORAGE_KEY);
-  if (!raw) return false;
-
-  try {
-    const session: Session = JSON.parse(raw);
-    if (!session.authenticated) return false;
-    if (Date.now() > session.expiresAt) {
-      localStorage.removeItem(STORAGE_KEY);
-      return false;
-    }
-    return true;
-  } catch {
-    localStorage.removeItem(STORAGE_KEY);
-    return false;
+export function requireStaff(req: Request) {
+  const key = req.headers.get("x-staff-key") || "";
+  const expected = process.env.STAFF_KEY || "";
+  if (!expected || expected === "change-me-now") {
+    throw new Error("STAFF_KEY not set securely in .env");
   }
-}
-
-export function loginStaff(password: string): boolean {
-  if (password !== STAFF_PASSWORD) return false;
-
-  const session: Session = {
-    authenticated: true,
-    expiresAt: Date.now() + SESSION_DURATION_MS,
-  };
-
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(session));
-  return true;
-}
-
-export function logoutStaff() {
-  if (typeof window === "undefined") return;
-  localStorage.removeItem(STORAGE_KEY);
+  if (key !== expected) {
+    const err: any = new Error("unauthorized");
+    err.status = 401;
+    throw err;
+  }
 }

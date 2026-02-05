@@ -10,5 +10,5 @@ export function getSession(sessionId: string): Session | null {
 }
 
 export function closeSessionApi(sessionId: string): boolean {
-  return closeTableSession(sessionId);
+  closeTableSession(sessionId); return true;
 }

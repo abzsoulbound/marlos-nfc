@@ -1,19 +1,13 @@
 import NFCTagClient from "./NFCTagClient";
 
 type PageProps = {
-  params: Promise<{
-    nfcTagId: string;
-  }>;
+  params: Promise<{ nfcTagId: string }>;
 };
 
 export default async function NFCTablePage({ params }: PageProps) {
   const { nfcTagId } = await params;
-
-  if (!nfcTagId) {
-    return <div>Invalid table</div>;
-  }
-
+  if (!nfcTagId) return <div>Invalid table</div>;
   return <NFCTagClient nfcTagId={nfcTagId} />;
 }
 
-export const runtime = "edge";
+export const runtime = "nodejs";

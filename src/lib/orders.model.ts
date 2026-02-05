@@ -1,37 +1,34 @@
+/**
+ * Compatibility wrapper.
+ * Older code called createOrder/getOrders from this module.
+ * Keep it, but route to the persistent ops store to avoid split-brain state.
+ */
+import { getBill, submitOrder } from "./ops";
+
 type OrderItem = {
   itemId: string;
   name: string;
   price: number;
   quantity: number;
+  station?: "KITCHEN" | "BAR";
 };
 
-type Order = {
-  orderId: string;
-  table: string;
-  items: OrderItem[];
-  notes: string;
-  createdAt: number;
-};
-
-const ORDERS: Order[] = [];
-
-export function createOrder(input: {
-  table: string;
-  items: OrderItem[];
-  notes: string;
-}) {
-  const order: Order = {
-    orderId: crypto.randomUUID(),
-    table: input.table,
-    items: input.items,
+export function createOrder(input: { table: string; items: OrderItem[]; notes: string }) {
+  // table is treated as tagId for back-compat in this repo snapshot
+  return submitOrder({
+    tagId: input.table,
     notes: input.notes,
-    createdAt: Date.now(),
-  };
-
-  ORDERS.push(order);
-  return order;
+    items: input.items.map(i => ({
+      id: String(i.itemId),
+      name: i.name,
+      price: i.price,
+      quantity: i.quantity,
+      station: (i.station === "BAR" ? "BAR" : "KITCHEN"),
+    })),
+  });
 }
 
 export function getOrders() {
-  return ORDERS;
+  // Back-compat: return a bill-like view (orders list was never stable here)
+  return getBill("unknown");
 }
