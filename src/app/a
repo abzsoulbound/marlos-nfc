@@ -1,9 +1,9 @@
-git status
-git add .
-git commit -m "commit"
-git push origin main
-
 zip -r marlos-nfc.zip . \
   -x "node_modules/*" \
   -x ".next/*" \
   -x ".git/*"
+
+git status
+git add .
+git commit -m "commit"
+git push origin main
