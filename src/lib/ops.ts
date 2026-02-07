@@ -297,7 +297,7 @@ export function mergeSessions(sourceTagId: string, targetTagId: string) {
       }
     }
 
-    source.status = "MERGED";
+    source.status = "CLOSED";
     source.closedAt = now();
     source.updatedAt = now();
 
