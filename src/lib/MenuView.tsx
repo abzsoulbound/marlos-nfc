@@ -1,3 +1,6 @@
+"use client";
+
+import { useState } from "react";
 import type { MenuSection } from "@/lib/menu";
 
 type Props = {
@@ -15,9 +18,16 @@ export function MenuView({
   onRemove,
   interactive = false,
 }: Props) {
+  const [activeSectionId, setActiveSectionId] = useState<string>(
+    sections[0]?.id ?? ""
+  );
+
+  const activeSection =
+    sections.find(s => s.id === activeSectionId) ?? sections[0];
+
   return (
     <div>
-      {/* HORIZONTAL SECTION SCROLLER */}
+      {/* SECTION TABS */}
       <div
         style={{
           display: "flex",
@@ -28,38 +38,39 @@ export function MenuView({
           WebkitOverflowScrolling: "touch",
         }}
       >
-        {sections.map(section => (
-          <a
-            key={section.id}
-            href={`#section-${section.id}`}
-            style={{
-              flex: "0 0 auto",
-              padding: "8px 14px",
-              borderRadius: 999,
-              background: "#f5f5f5",
-              textDecoration: "none",
-              color: "#111",
-              fontSize: 14,
-              whiteSpace: "nowrap",
-            }}
-          >
-            {section.title}
-          </a>
-        ))}
+        {sections.map(section => {
+          const active = section.id === activeSectionId;
+
+          return (
+            <button
+              key={section.id}
+              onClick={() => setActiveSectionId(section.id)}
+              style={{
+                flex: "0 0 auto",
+                padding: "8px 14px",
+                borderRadius: 999,
+                border: "none",
+                background: active ? "#111" : "#f5f5f5",
+                color: active ? "#fff" : "#111",
+                fontSize: 14,
+                whiteSpace: "nowrap",
+                cursor: "pointer",
+              }}
+            >
+              {section.title}
+            </button>
+          );
+        })}
       </div>
 
-      {/* SECTIONS */}
-      {sections.map(section => (
-        <section
-          key={section.id}
-          id={`section-${section.id}`}
-          style={{ padding: "16px" }}
-        >
+      {/* ACTIVE SECTION ONLY */}
+      {activeSection && (
+        <section style={{ padding: "16px" }}>
           <h2 style={{ marginBottom: 12 }}>
-            {section.title}
+            {activeSection.title}
           </h2>
 
-          {section.items.map(item => {
+          {activeSection.items.map(item => {
             const qty = quantities[item.id] ?? 0;
 
             return (
@@ -93,7 +104,7 @@ export function MenuView({
             );
           })}
         </section>
-      ))}
+      )}
     </div>
   );
 }

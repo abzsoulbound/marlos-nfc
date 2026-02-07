@@ -3,12 +3,12 @@
     "c8e40718-e13e-4c07-acae-a9e4727e1507": {
       "id": "c8e40718-e13e-4c07-acae-a9e4727e1507",
       "tagId": "07",
-      "tableNumber": null,
+      "tableNumber": "7",
       "status": "OPEN",
       "openedAt": 1770428007546,
-      "updatedAt": 1770428923607,
+      "updatedAt": 1770433640364,
       "closedAt": null,
-      "expiresAt": 1770434323607
+      "expiresAt": 1770439040364
     }
   },
   "orders": {},
@@ -67,6 +67,16 @@
     {
       "id": "1e55c0a3-5c8b-4e43-a003-85fca0e08362",
       "at": 1770428923608,
+      "actor": "system",
+      "action": "session.touched",
+      "meta": {
+        "sessionId": "c8e40718-e13e-4c07-acae-a9e4727e1507",
+        "tagId": "07"
+      }
+    },
+    {
+      "id": "35d6ad35-8df1-4594-aea4-5781d356d205",
+      "at": 1770433640365,
       "actor": "system",
       "action": "session.touched",
       "meta": {
