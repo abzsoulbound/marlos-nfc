@@ -6,13 +6,12 @@ export function buildReceipt(
   type: ReceiptType
 ): Receipt {
   const lines = order.cart.items.map(item => ({
-    text: `${item.quantity}× ${item.name} – £${item.lineTotal.toFixed(2)}`
-  }));
+  text: `${item.quantity}× ${item.name}`
+}));
 
   return {
-    type,
-    orderId: order.id,
-    lines,
-    total: type === "customer" ? order.cart.total : undefined,
-  };
+  type,
+  orderId: order.id,
+  lines,
+};
 }

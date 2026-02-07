@@ -1,18 +1,21 @@
+// src/lib/staff.actions.ts
+
+import type { Bill } from "./bill.types";
 import { billStore } from "./store.repo";
 
-export function markBillAsPaid(billId: string) {
-  const bill = billStore.get(billId);
-  if (!bill) {
+export async function markBillAsPaid(billId: string): Promise<Bill> {
+  const existing = billStore.get(billId);
+
+  if (!existing) {
     throw new Error("Bill not found");
   }
-  if (bill.status === "paid") {
-    return bill;
-  }
-  const updated = {
-    ...bill,
+
+  const updated: Bill = {
+    ...existing,
     status: "paid",
     paidAt: new Date().toISOString(),
   };
+
   billStore.set(billId, updated);
   return updated;
 }

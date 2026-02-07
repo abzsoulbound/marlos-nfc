@@ -1,6 +1,6 @@
 import type { Order } from "./order.types";
 import type { PrintJob } from "./printer.types";
-import { getFulfillmentArea } from "./fulfillment.utils";
+import { getFulfilmentArea } from "./fulfilment.utils";
 import { PRINTER_BY_AREA } from "./printer.map";
 
 export function buildPrintJobs(order: Order): PrintJob[] {
@@ -11,9 +11,9 @@ export function buildPrintJobs(order: Order): PrintJob[] {
   };
 
   for (const item of order.cart.items) {
-    const area = getFulfillmentArea(item.itemId);
+    const area = getFulfilmentArea(item.itemId);
     byArea[area].push(
-      `${item.quantity}× ${item.name}${item.notes ? ` (${item.notes})` : ""}`
+      `${item.quantity}x ${item.name}`
     );
   }
 
