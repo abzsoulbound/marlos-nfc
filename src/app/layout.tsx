@@ -9,7 +9,13 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <header>Marlo’s Brasserie</header>
+        <header>
+          <img
+            src="/marlos-logo.png"
+            alt="Marlo’s Brasserie"
+            style={{ height: 56 }}
+          />
+        </header>
         {children}
       </body>
     </html>
