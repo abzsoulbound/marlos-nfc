@@ -1,40 +1,27 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useParams } from "next/navigation";
 import type { Receipt } from "@/lib/receipt.types";
 
-type Params = {
-  nfcTagId: string;
-};
+export default function ReviewPage() {
+  const params = useParams();
+  const tagId =
+    typeof params?.nfcTagId === "string" ? params.nfcTagId : "";
 
-export default function ReviewPage({
-  params,
-}: {
-  params: Promise<Params>;
-}) {
   const [receipt, setReceipt] = useState<Receipt | null>(null);
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    let cancelled = false;
+    if (!tagId) return;
 
-    params.then(({ nfcTagId }) => {
-      fetch(`/api/receipts/${nfcTagId}`)
-        .then((res) => res.json())
-        .then((data) => {
-          if (!cancelled) {
-            setReceipt(data);
-            setLoading(false);
-          }
-        });
-    });
+    fetch(`/api/receipts/${tagId}`)
+      .then((res) => res.json())
+      .then(setReceipt);
+  }, [tagId]);
 
-    return () => {
-      cancelled = true;
-    };
-  }, [params]);
-
-  if (loading || !receipt) return <main />;
+  if (!receipt) {
+    return <main />;
+  }
 
   return (
     <main>
