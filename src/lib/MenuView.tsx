@@ -1,4 +1,4 @@
-import type { MenuSection } from "@/lib/menu";
+import type { MenuSection } from "@/lib/menu.types";
 
 export function MenuView({
   sections,
@@ -16,16 +16,14 @@ export function MenuView({
   return (
     <>
       {sections.map(section => (
-        <section key={section.id}>
-          <div className="section-title">{section.title}</div>
+        <section key={section.id} className="menu-section">
+          <h2 className="section-title">{section.title}</h2>
 
           {section.items.map(item => (
             <div key={item.id} className="menu-item">
               <div className="item-header">
                 <div className="item-title">{item.name}</div>
-                <div className="item-price">
-                  £{item.price.toFixed(2)}
-                </div>
+                <div className="item-price">£{item.price.toFixed(2)}</div>
               </div>
 
               {item.description && (
