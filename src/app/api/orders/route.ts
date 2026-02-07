@@ -1,33 +1,39 @@
 import { NextResponse } from "next/server";
-import { submitOrder } from "@/lib/ops";
-
-export const runtime = "nodejs";
+import { openSessionByTag } from "@/lib/session.close";
+import { buildOrder } from "@/lib/order.serialize";
+import type { SerializedCart } from "@/lib/cart.types";
 
 export async function POST(req: Request) {
-  const body = await req.json().catch(() => ({}));
+  const body = await req.json();
 
-  // Back-compat accepted shapes:
-  // 1) { tagId, items, notes }
-  // 2) { tableId, items }  (older)
-  const tagId = String(body?.tagId ?? body?.tableId ?? "");
-  const items = Array.isArray(body?.items) ? body.items : [];
-  const notes = typeof body?.notes === "string" ? body.notes : "";
+  const { tagId, cart, notes } = body as {
+    tagId: string;
+    cart: SerializedCart;
+    notes?: string;
+  };
 
-  if (!tagId || items.length === 0) {
-    return NextResponse.json({ error: "Invalid payload" }, { status: 400 });
+  if (!tagId || !cart || cart.items.length === 0) {
+    return NextResponse.json(
+      { error: "Invalid order payload" },
+      { status: 400 }
+    );
   }
 
-  const order = submitOrder({
-    tagId,
+  const session = await openSessionByTag(tagId);
+
+  if (!session) {
+    return NextResponse.json(
+      { error: "No open session for tag" },
+      { status: 404 }
+    );
+  }
+
+  const order = await buildOrder({
+    id: crypto.randomUUID(),
+    tableId: session.tableId,
+    cart,
     notes,
-    items: items.map((i: any) => ({
-      id: String(i.id ?? i.itemId ?? i.variantId ?? crypto.randomUUID()),
-      name: String(i.name),
-      price: Number(i.price ?? 0),
-      quantity: Number(i.quantity ?? 1),
-      station: (i.station === "BAR" ? "BAR" : "KITCHEN"),
-    })),
   });
 
-  return NextResponse.json({ order });
+  return NextResponse.json({ ok: true, orderId: order.id });
 }

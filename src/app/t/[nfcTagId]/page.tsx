@@ -8,7 +8,7 @@ export default function TablePage({
 }) {
   return (
     <NFCMenuClient
-      tableId={params.nfcTagId}
+      tagId={params.nfcTagId}
       sections={[...menu].sort((a, b) => a.order - b.order)}
     />
   );
