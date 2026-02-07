@@ -10,16 +10,18 @@ export default function ReviewPage() {
     typeof params?.nfcTagId === "string" ? params.nfcTagId : "";
 
   const [receipt, setReceipt] = useState<Receipt | null>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (!tagId) return;
 
     fetch(`/api/receipts/${tagId}`)
       .then((res) => res.json())
-      .then(setReceipt);
+      .then(setReceipt)
+      .finally(() => setLoading(false));
   }, [tagId]);
 
-  if (!receipt) {
+  if (loading || !receipt) {
     return <main />;
   }
 

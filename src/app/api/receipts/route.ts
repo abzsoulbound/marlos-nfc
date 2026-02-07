@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { getBill } from "@/lib/ops";
 import { buildReceipt } from "@/lib/receipt.build";
+import type { ReceiptType } from "@/lib/receipt.types";
 
 export async function GET(
   _req: Request,
@@ -12,7 +13,8 @@ export async function GET(
     return NextResponse.json({ error: "Bill not found" }, { status: 404 });
   }
 
-  const receipt = buildReceipt(bill);
+  const receiptType: ReceiptType = "customer";
+  const receipt = buildReceipt(bill, receiptType);
 
   return NextResponse.json(receipt);
 }
