@@ -1,27 +1,15 @@
 import "./globals.css";
-import type { Metadata } from "next";
-
-export const metadata: Metadata = {
-  title: "Marlo’s Brasserie",
-  description: "NFC Ordering System",
-};
+import type { ReactNode } from "react";
 
 export default function RootLayout({
   children,
 }: {
-  children: React.ReactNode;
+  children: ReactNode;
 }) {
   return (
     <html lang="en">
-      <body
-        style={{
-          margin: 0,
-          minHeight: "100vh",
-          background: "#000",
-          color: "#fff",
-          fontFamily: "system-ui, sans-serif",
-        }}
-      >
+      <body>
+        <header>Marlo’s Brasserie</header>
         {children}
       </body>
     </html>

@@ -1,0 +1,79 @@
+{
+  "sessions": {
+    "c8e40718-e13e-4c07-acae-a9e4727e1507": {
+      "id": "c8e40718-e13e-4c07-acae-a9e4727e1507",
+      "tagId": "07",
+      "tableNumber": null,
+      "status": "OPEN",
+      "openedAt": 1770428007546,
+      "updatedAt": 1770428923607,
+      "closedAt": null,
+      "expiresAt": 1770434323607
+    }
+  },
+  "orders": {},
+  "tableAssignments": {},
+  "audit": [
+    {
+      "id": "1bef685c-ea24-43d0-98a2-f2235f45b808",
+      "at": 1770428007546,
+      "actor": "system",
+      "action": "session.opened",
+      "meta": {
+        "sessionId": "c8e40718-e13e-4c07-acae-a9e4727e1507",
+        "tagId": "07"
+      }
+    },
+    {
+      "id": "bf289328-830a-4e80-a541-3ac0bfb7977d",
+      "at": 1770428275865,
+      "actor": "system",
+      "action": "session.touched",
+      "meta": {
+        "sessionId": "c8e40718-e13e-4c07-acae-a9e4727e1507",
+        "tagId": "07"
+      }
+    },
+    {
+      "id": "70a1ccbe-74f7-479d-9f07-1bc7db44865d",
+      "at": 1770428414636,
+      "actor": "system",
+      "action": "session.touched",
+      "meta": {
+        "sessionId": "c8e40718-e13e-4c07-acae-a9e4727e1507",
+        "tagId": "07"
+      }
+    },
+    {
+      "id": "18986bff-4b4c-491d-ac50-5b4ab1c52c15",
+      "at": 1770428414640,
+      "actor": "system",
+      "action": "session.touched",
+      "meta": {
+        "sessionId": "c8e40718-e13e-4c07-acae-a9e4727e1507",
+        "tagId": "07"
+      }
+    },
+    {
+      "id": "4e1c884e-9c0f-405d-a8db-6ec956419cd2",
+      "at": 1770428428596,
+      "actor": "system",
+      "action": "session.touched",
+      "meta": {
+        "sessionId": "c8e40718-e13e-4c07-acae-a9e4727e1507",
+        "tagId": "07"
+      }
+    },
+    {
+      "id": "1e55c0a3-5c8b-4e43-a003-85fca0e08362",
+      "at": 1770428923608,
+      "actor": "system",
+      "action": "session.touched",
+      "meta": {
+        "sessionId": "c8e40718-e13e-4c07-acae-a9e4727e1507",
+        "tagId": "07"
+      }
+    }
+  ],
+  "version": 1
+}

@@ -1,44 +1,41 @@
-"use client";
+import type { MenuSection } from "@/lib/menu";
 
-import { menu } from "./menu";
-
-export default function MenuView({
-  interactive,
+export function MenuView({
+  sections,
+  quantities,
   onAdd,
   onRemove,
-  quantities = {},
+  interactive = false,
 }: {
-  interactive?: boolean;
+  sections: MenuSection[];
+  quantities: Record<string, number>;
   onAdd?: (id: string) => void;
   onRemove?: (id: string) => void;
-  quantities?: Record<string, number>;
+  interactive?: boolean;
 }) {
   return (
-    <div>
-      {menu.map(section => (
-        <section key={section.id} style={{ marginBottom: 24 }}>
-          <h2>{section.title}</h2>
+    <>
+      {sections.map(section => (
+        <section key={section.id}>
+          <div className="section-title">{section.title}</div>
 
           {section.items.map(item => (
-            <div
-              key={item.id}
-              style={{
-                border: "1px solid #222",
-                padding: 12,
-                marginBottom: 8,
-                borderRadius: 8,
-              }}
-            >
-              <strong>{item.name}</strong>
-              <p>{item.description}</p>
-              <div>£{item.price.toFixed(2)}</div>
+            <div key={item.id} className="menu-item">
+              <div className="item-header">
+                <div className="item-title">{item.name}</div>
+                <div className="item-price">
+                  £{item.price.toFixed(2)}
+                </div>
+              </div>
+
+              {item.description && (
+                <div className="item-desc">{item.description}</div>
+              )}
 
               {interactive && (
-                <div style={{ marginTop: 8 }}>
-                  <button onClick={() => onRemove?.(item.id)}>-</button>
-                  <span style={{ margin: "0 12px" }}>
-                    {quantities[item.id] ?? 0}
-                  </span>
+                <div className="qty">
+                  <button onClick={() => onRemove?.(item.id)}>−</button>
+                  <span>{quantities[item.id] ?? 0}</span>
                   <button onClick={() => onAdd?.(item.id)}>+</button>
                 </div>
               )}
@@ -46,6 +43,6 @@ export default function MenuView({
           ))}
         </section>
       ))}
-    </div>
+    </>
   );
 }

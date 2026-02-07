@@ -1,0 +1,4 @@
+git status
+git add .
+git commit -m "Fix App Router CSR boundaries and restore build integrity"
+git push origin main
