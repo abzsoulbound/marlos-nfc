@@ -1,4 +1,9 @@
 git status
 git add .
-git commit -m "Fix App Router CSR boundaries and restore build integrity"
+git commit -m "commit"
 git push origin main
+
+zip -r marlos-nfc.zip . \
+  -x "node_modules/*" \
+  -x ".next/*" \
+  -x ".git/*"

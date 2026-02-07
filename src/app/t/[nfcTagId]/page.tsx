@@ -7,17 +7,9 @@ export default function TablePage({
   params: { nfcTagId: string };
 }) {
   return (
-    <>
-      {/* Hero */}
-      <header className="hero">
-        <h1>Marlo’s Brasserie</h1>
-        <p>Table {params.nfcTagId}</p>
-      </header>
-
-      {/* Client boundary */}
-      <NFCMenuClient
-        sections={[...menu].sort((a, b) => a.order - b.order)}
-      />
-    </>
+    <NFCMenuClient
+      tableId={params.nfcTagId}
+      sections={[...menu].sort((a, b) => a.order - b.order)}
+    />
   );
 }

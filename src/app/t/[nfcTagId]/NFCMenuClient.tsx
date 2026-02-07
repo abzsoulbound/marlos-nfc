@@ -1,12 +1,14 @@
 "use client";
 
 import { useState } from "react";
-import type { MenuSection } from "@/lib/menu.types";
+import type { MenuSection } from "@/lib/menu";
 import { MenuView } from "@/lib/MenuView";
 
 export default function NFCMenuClient({
+  tableId,
   sections,
 }: {
+  tableId: string;
   sections: MenuSection[];
 }) {
   const [quantities, setQuantities] = useState<Record<string, number>>({});
@@ -22,21 +24,28 @@ export default function NFCMenuClient({
     }));
   }
 
-  return (
-    <main>
-      <MenuView
-        sections={sections}
-        quantities={quantities}
-        onAdd={add}
-        onRemove={remove}
-        interactive
-      />
+  const hasItems = Object.values(quantities).some(v => v > 0);
 
-      <footer className="footer">
-        <button disabled={!Object.values(quantities).some(v => v > 0)}>
-          Review order
-        </button>
-      </footer>
-    </main>
+  return (
+    <>
+      <header className="hero">
+        <h1>Marlo’s Brasserie</h1>
+        <p>Table {tableId}</p>
+      </header>
+
+      <main>
+        <MenuView
+          sections={sections}
+          quantities={quantities}
+          onAdd={add}
+          onRemove={remove}
+          interactive
+        />
+      </main>
+
+      <div className="footer">
+        <button disabled={!hasItems}>Review order</button>
+      </div>
+    </>
   );
 }

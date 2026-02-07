@@ -7,8 +7,7 @@ export default function MenuPage() {
       <MenuView
         sections={[...menu].sort((a, b) => a.order - b.order)}
         quantities={{}}
-        onAdd={() => {}}
-        onRemove={() => {}}
+        interactive={false}
       />
     </main>
   );

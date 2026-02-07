@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { MenuView } from "@/lib/MenuView";
-import type { MenuSection } from "@/lib/menu.types";
+import type { MenuSection } from "@/lib/menu.ts";
 
 export default function NFCClient({
   tableId,
