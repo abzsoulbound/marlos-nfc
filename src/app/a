@@ -2,10 +2,29 @@ zip -r marlos-nfc.zip . \
   -x "node_modules/*" \
   -x ".next/*" \
   -x ".git/*"
-
 git status
 git add .
 git commit -m "commit"
 git push origin main
 
 npm run dev
+
+
+
+
+
+
+cd marlos-nfc
+git status
+git add .
+git commit -m "deploy to vercel"
+git push origin main
+
+npm i -g vercel
+vercel login
+vercel link --project marlos-nfc-vercel
+vercel env pull .env.local
+vercel project add marlos-nfc-vercel
+vercel project set framework nextjs
+vercel
+vercel --prod

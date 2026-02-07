@@ -5,8 +5,6 @@ import {
   type Order,
   type OrderItem,
   type Station,
-  type ItemStatus,
-  type OrderStatus,
 } from "./persist.store";
 import { publish } from "./realtime.bus";
 
@@ -45,6 +43,14 @@ export function openOrResumeSession(tagId: string): Session {
   });
 }
 
+export function listOpenSessions(): Session[] {
+  return mutateStore((s) =>
+    Object.values(s.sessions)
+      .filter((x) => x.status === "OPEN")
+      .sort((a, b) => a.openedAt - b.openedAt)
+  );
+}
+
 export function closeSessionByTag(tagId: string) {
   return mutateStore((s) => {
     const session = Object.values(s.sessions).find(
@@ -61,6 +67,10 @@ export function closeSessionByTag(tagId: string) {
 
     return session;
   });
+}
+
+export function closeTab(tagId: string) {
+  return closeSessionByTag(tagId);
 }
 
 export function submitOrder(input: {
@@ -149,7 +159,6 @@ export function markStationReady(orderId: string, station: Station) {
 
     if (changed) {
       order.updatedAt = now();
-
       const allReady = order.items.every((i) => i.status === "READY");
       order.status = allReady ? "READY" : "OPEN";
 
@@ -204,5 +213,99 @@ export function cancelOrder(orderId: string) {
     });
 
     return order;
+  });
+}
+
+export function getBill(tagId: string) {
+  return mutateStore((s) => {
+    const session = Object.values(s.sessions).find(
+      (x) => x.tagId === tagId
+    );
+    if (!session) return null;
+
+    const orders = Object.values(s.orders).filter(
+      (o) => o.sessionId === session.id && o.status !== "CANCELLED"
+    );
+
+    const total = orders.reduce(
+      (sum, o) =>
+        sum +
+        o.items.reduce(
+          (iSum, i) => iSum + i.price * i.quantity,
+          0
+        ),
+      0
+    );
+
+    return { sessionId: session.id, tagId, total, orders };
+  });
+}
+
+export function setTableAssignment(tagId: string, tableNumber: string) {
+  return mutateStore((s) => {
+    const session = Object.values(s.sessions).find(
+      (x) => x.tagId === tagId && x.status === "OPEN"
+    );
+    if (!session) return null;
+
+    session.tableNumber = tableNumber;
+    session.updatedAt = now();
+
+    audit("staff", "table.assigned", {
+      sessionId: session.id,
+      tableNumber,
+    });
+
+    return session;
+  });
+}
+
+export function reassignTag(oldTagId: string, newTagId: string) {
+  return mutateStore((s) => {
+    const session = Object.values(s.sessions).find(
+      (x) => x.tagId === oldTagId && x.status === "OPEN"
+    );
+    if (!session) return null;
+
+    session.tagId = newTagId;
+    session.updatedAt = now();
+
+    audit("staff", "tag.reassigned", {
+      sessionId: session.id,
+      oldTagId,
+      newTagId,
+    });
+
+    return session;
+  });
+}
+
+export function mergeSessions(sourceTagId: string, targetTagId: string) {
+  return mutateStore((s) => {
+    const source = Object.values(s.sessions).find(
+      (x) => x.tagId === sourceTagId
+    );
+    const target = Object.values(s.sessions).find(
+      (x) => x.tagId === targetTagId
+    );
+    if (!source || !target) return null;
+
+    for (const order of Object.values(s.orders)) {
+      if (order.sessionId === source.id) {
+        order.sessionId = target.id;
+        order.updatedAt = now();
+      }
+    }
+
+    source.status = "MERGED";
+    source.closedAt = now();
+    source.updatedAt = now();
+
+    audit("staff", "session.merged", {
+      sourceSessionId: source.id,
+      targetSessionId: target.id,
+    });
+
+    return target;
   });
 }
