@@ -58,26 +58,7 @@ export default function NFCMenuClient({
 
   return (
     <div style={{ background: "#0b0f14", minHeight: "100vh" }}>
-      {/* BRAND HEADER */}
-      <header
-        style={{
-          background: "#dbe7ec",
-          padding: "28px 16px 22px",
-          textAlign: "center",
-          borderBottom: "1px solid rgba(0,0,0,0.06)",
-        }}
-      >
-        <img
-          src="/marlos-logo.png"
-          alt="Marlo’s Brasserie"
-          style={{
-            maxWidth: 220,
-            width: "70%",
-            height: "auto",
-          }}
-        />
-      </header>
-
+      
       {/* MENU */}
       <main style={{ color: "#fff" }}>
         <MenuView

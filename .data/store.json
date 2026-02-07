@@ -6,12 +6,73 @@
       "tableNumber": "7",
       "status": "OPEN",
       "openedAt": 1770428007546,
-      "updatedAt": 1770433640364,
+      "updatedAt": 1770487096475,
       "closedAt": null,
-      "expiresAt": 1770439040364
+      "expiresAt": 1770492496475
     }
   },
-  "orders": {},
+  "orders": {
+    "d819dee5-6aea-4219-af42-b7150dc716dc": {
+      "id": "d819dee5-6aea-4219-af42-b7150dc716dc",
+      "sessionId": "c8e40718-e13e-4c07-acae-a9e4727e1507",
+      "tagId": "07",
+      "tableNumber": "7",
+      "createdAt": 1770486799361,
+      "updatedAt": 1770486799361,
+      "notes": "",
+      "status": "OPEN",
+      "items": [
+        {
+          "id": "las-vegas-breakfast",
+          "name": "Las Vegas Breakfast",
+          "price": 13.95,
+          "quantity": 4,
+          "station": "KITCHEN",
+          "status": "PENDING"
+        }
+      ]
+    },
+    "0588d48f-5605-4524-beda-0e22365f8d45": {
+      "id": "0588d48f-5605-4524-beda-0e22365f8d45",
+      "sessionId": "c8e40718-e13e-4c07-acae-a9e4727e1507",
+      "tagId": "07",
+      "tableNumber": "7",
+      "createdAt": 1770487015840,
+      "updatedAt": 1770487015840,
+      "notes": "",
+      "status": "OPEN",
+      "items": [
+        {
+          "id": "las-vegas-breakfast",
+          "name": "Las Vegas Breakfast",
+          "price": 13.95,
+          "quantity": 3,
+          "station": "KITCHEN",
+          "status": "PENDING"
+        }
+      ]
+    },
+    "bae589de-5dc5-4f91-883d-97a6fec3e9ea": {
+      "id": "bae589de-5dc5-4f91-883d-97a6fec3e9ea",
+      "sessionId": "c8e40718-e13e-4c07-acae-a9e4727e1507",
+      "tagId": "07",
+      "tableNumber": "7",
+      "createdAt": 1770487096477,
+      "updatedAt": 1770487096477,
+      "notes": "",
+      "status": "OPEN",
+      "items": [
+        {
+          "id": "las-vegas-breakfast",
+          "name": "Las Vegas Breakfast",
+          "price": 13.95,
+          "quantity": 3,
+          "station": "KITCHEN",
+          "status": "PENDING"
+        }
+      ]
+    }
+  },
   "tableAssignments": {},
   "audit": [
     {
@@ -82,6 +143,39 @@
       "meta": {
         "sessionId": "c8e40718-e13e-4c07-acae-a9e4727e1507",
         "tagId": "07"
+      }
+    },
+    {
+      "id": "535b6969-7c93-404a-9152-76cb7eaaeaed",
+      "at": 1770486799361,
+      "actor": "system",
+      "action": "order.submitted",
+      "meta": {
+        "orderId": "d819dee5-6aea-4219-af42-b7150dc716dc",
+        "tagId": "07",
+        "sessionId": "c8e40718-e13e-4c07-acae-a9e4727e1507"
+      }
+    },
+    {
+      "id": "0805eec2-1640-4a4d-82b1-a65fb9f5df56",
+      "at": 1770487015840,
+      "actor": "system",
+      "action": "order.submitted",
+      "meta": {
+        "orderId": "0588d48f-5605-4524-beda-0e22365f8d45",
+        "tagId": "07",
+        "sessionId": "c8e40718-e13e-4c07-acae-a9e4727e1507"
+      }
+    },
+    {
+      "id": "42b16cf2-9023-4c9a-b9dd-fea2ad4b5bf0",
+      "at": 1770487096477,
+      "actor": "system",
+      "action": "order.submitted",
+      "meta": {
+        "orderId": "bae589de-5dc5-4f91-883d-97a6fec3e9ea",
+        "tagId": "07",
+        "sessionId": "c8e40718-e13e-4c07-acae-a9e4727e1507"
       }
     }
   ],
