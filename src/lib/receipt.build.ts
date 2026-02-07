@@ -6,12 +6,12 @@ export function buildReceipt(
   type: ReceiptType
 ): Receipt {
   const lines = order.cart.items.map(item => ({
-  text: `${item.quantity}× ${item.name}`
-}));
+    text: `${item.quantity}x ${item.name}`,
+  }));
 
   return {
-  type,
-  orderId: order.id,
-  lines,
-};
+    type,
+    orderId: order.id,
+    lines,
+  };
 }
