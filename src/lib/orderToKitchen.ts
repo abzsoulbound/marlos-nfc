@@ -3,7 +3,7 @@ import type { MenuItem } from "./menu";
 
 export function mapOrderToKitchenOrder(params: {
   orderId: string;
-  table: string;
+  tableId: string;
   items: Array<{
     menuItem: MenuItem;
     quantity: number;
@@ -20,7 +20,7 @@ export function mapOrderToKitchenOrder(params: {
 
   return {
     orderId: params.orderId,
-    table: params.table,
+    tableId: params.tableId,
     createdAt: new Date().toISOString(),
     items,
   };

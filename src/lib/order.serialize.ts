@@ -8,7 +8,6 @@ export function buildOrder(params: {
   id: string;
   tableId: string;
   cart: Cart;
-  notes?: string;
 }): Order {
   const now = new Date().toISOString();
 

@@ -1,8 +1,7 @@
 import type { Cart } from "./cart.types";
-import type { OrderRouting } from "./order.types";
-import { getFulfillmentArea } from "./fulfillment.utils";
+import { getFulfillmentArea } from "./fulfilment.utils";
 
-export function deriveRouting(cart: Cart): OrderRouting {
+export function deriveRouting(cart: Cart) {
   let kitchen = false;
   let bar = false;
 
