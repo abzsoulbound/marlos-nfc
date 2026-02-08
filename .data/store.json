@@ -6,9 +6,9 @@
       "tableNumber": "7",
       "status": "OPEN",
       "openedAt": 1770428007546,
-      "updatedAt": 1770487096475,
+      "updatedAt": 1770495418282,
       "closedAt": null,
-      "expiresAt": 1770492496475
+      "expiresAt": 1770500818282
     }
   },
   "orders": {
@@ -67,6 +67,26 @@
           "name": "Las Vegas Breakfast",
           "price": 13.95,
           "quantity": 3,
+          "station": "KITCHEN",
+          "status": "PENDING"
+        }
+      ]
+    },
+    "cb76860e-b6f9-4590-b3d9-c23a556ff2e4": {
+      "id": "cb76860e-b6f9-4590-b3d9-c23a556ff2e4",
+      "sessionId": "c8e40718-e13e-4c07-acae-a9e4727e1507",
+      "tagId": "07",
+      "tableNumber": "7",
+      "createdAt": 1770495418284,
+      "updatedAt": 1770495418284,
+      "notes": "",
+      "status": "OPEN",
+      "items": [
+        {
+          "id": "las-vegas-breakfast",
+          "name": "Las Vegas Breakfast",
+          "price": 13.95,
+          "quantity": 2,
           "station": "KITCHEN",
           "status": "PENDING"
         }
@@ -174,6 +194,17 @@
       "action": "order.submitted",
       "meta": {
         "orderId": "bae589de-5dc5-4f91-883d-97a6fec3e9ea",
+        "tagId": "07",
+        "sessionId": "c8e40718-e13e-4c07-acae-a9e4727e1507"
+      }
+    },
+    {
+      "id": "e8a1b660-0cad-43f3-bb2d-d5e98c1a084f",
+      "at": 1770495418284,
+      "actor": "system",
+      "action": "order.submitted",
+      "meta": {
+        "orderId": "cb76860e-b6f9-4590-b3d9-c23a556ff2e4",
         "tagId": "07",
         "sessionId": "c8e40718-e13e-4c07-acae-a9e4727e1507"
       }
